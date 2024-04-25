@@ -16,10 +16,10 @@ async def main():
     ) as client:
         await client.subscribe(os.environ['TOPICO1'])
         await client.subscribe(os.environ['TOPICO2'])
-        async for message in client.messages:
-            logging.info(str(message.topic) + ": " + message.payload.decode("utf-8"))
         await client.subscribe(os.environ['TOPICO3'])
         await client.publish(os.environ['TOPICO3'], "publicando", qos=1)
+        async for message in client.messages:
+            logging.info(str(message.topic) + ": " + message.payload.decode("utf-8"))
 
 
 if __name__ == "__main__":
