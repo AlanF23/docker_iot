@@ -1,25 +1,36 @@
 import asyncio, ssl, certifi, logging, os
 import aiomqtt
 
-logging.basicConfig(format='%(asctime)s - cliente mqtt - %(levelname)s:%(message)s', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S %z')
+logging.basicConfig(format='%(taskName)s: %(asctime)s - cliente mqtt - %(levelname)s:%(message)s', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S %z')
 
-async def topico1():
-    global topicos
-    while True:
-        menssage = await topicos
-        logging.info(str(message.topic) + ": " + message.payload.decode("utf-8"))
-        await asyncio.sleep(5)
+class contador:
+    def __init__(self):
+        self.cont = 0
+    
+    def suma(self):
+        self.cont += 1
 
-async def recibir(client):
-    global topicos
+async def topico1(client):
     while True:
         async for message in client.messages:
             if message.topic == os.environ['TOPICO1']:
-                topicos.apend(menssage.topic)
+                logging.info(str(message.topic) + ": " + message.payload.decode("utf-8"))
 
-async def publicar(client):
+async def topico2(client):
     while True:
-        await client.publish(os.environ['TOPICO3'], "publicando", qos=1)
+        async for message in client.messages:
+            if message.topic == os.environ['TOPICO2']:
+                logging.info(str(message.topic) + ": " + message.payload.decode("utf-8"))
+
+async def contar():
+    while True:
+        Contador.suma()
+        await asyncio.sleep(3)
+
+async def publicar_contador(client):
+    while True:
+        await client.publish(os.environ['TOPICO3'], Contador.cont, qos=1)
+        logging.info(os.environ['TOPICO3'] + ": " + Contador.cont)
         await asyncio.sleep(5)
 
 async def main():
@@ -36,12 +47,12 @@ async def main():
         await client.subscribe(os.environ['TOPICO1'])
         await client.subscribe(os.environ['TOPICO2'])
         await client.subscribe(os.environ['TOPICO3'])
-        task_1=asyncio.create_task(topico1(),name='task1')
-        task_2=asyncio.create_task(publicar(client),name='task2')
-        task_3=asyncio.create_task(recibir(client),name='task3')
-        #async for message in client.messages:
-        #    logging.info(str(message.topic) + ": " + message.payload.decode("utf-8"))
+        task_1=asyncio.create_task(topico1(client),name='topico1')
+        task_2=asyncio.create_task(topico1(client),name='topico2')
+        task_3=asyncio.create_task(publicar_contador(client),name='contador')
 
+Contador = contador()
+        
 if __name__ == "__main__":
     try:
         asyncio.run(main())
