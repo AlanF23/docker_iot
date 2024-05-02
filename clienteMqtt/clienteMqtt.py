@@ -1,4 +1,5 @@
 import asyncio, ssl, certifi, logging, os
+import sys
 import aiomqtt
 
 logging.basicConfig(format='%(taskName)s: %(asctime)s - cliente mqtt - %(levelname)s:%(message)s', level=logging.INFO, datefmt='%d/%m/%Y %H:%M:%S %z')
