@@ -50,6 +50,8 @@ async def main():
         task_1=asyncio.create_task(topico1(client),name='topico1')
         task_2=asyncio.create_task(topico1(client),name='topico2')
         task_3=asyncio.create_task(publicar_contador(client),name='contador')
+        task_4=asyncio.create_task(contar())
+        await asyncio.gather(task_1,task_2,task_3,task_4)
 
 Contador = contador()
         
