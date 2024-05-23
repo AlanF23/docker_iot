@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import logging, os
+import logging, os, asyncio
 
 token=os.environ["TB_TOKEN"]
 
@@ -20,12 +20,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # await update.message.reply_text("Bienvenido al Bot "+ nombre + " " + apellido) # también funciona
 
 async def acercade(update: Update, context):
-    await context.bot.send_message(update.message.chat.id, text="Este bot fue creado para el curso de IoT (2023)")
+    await context.bot.send_message(update.message.chat.id, text="Este bot fue creado para el curso de IoT FIO")
 
 async def kill(update: Update, context):
     logging.info(context.args)
     if context.args and context.args[0] == '@e':
+<<<<<<< HEAD
         await context.bot.send_animation(update.message.chat.id, "CgACAgEAAxkBAANXZAiWvDIEfGNVzodgTgH1o5z3_WEAAmUCAALrx0lEZ8ytatzE5X0uBA")
+=======
+        await context.bot.send_animation(update.message.chat.id, "CgACAgEAAxkBAAOPZkuctzsWZVlDSNoP9PavSZmH5poAAmUCAALrx0lEVKaX7K-68Ns1BA")
+>>>>>>> 40d7c67c0ddf69954fadedb5fd229a22d10346a9
         await asyncio.sleep(6)
         await context.bot.send_message(update.message.chat.id, text="¡¡¡Ahora estan todos muertos!!!")
     else:
