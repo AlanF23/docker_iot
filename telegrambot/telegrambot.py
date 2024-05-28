@@ -130,7 +130,7 @@ async def periodo(update: Update, context):
 
 async def destello(update: Update, context):
     logging.info(update.message.text)
-    await context.bot.send_message(update.message.chat.id, text="Destellando")
+    await context.bot.send_message(update.message.chat.id, text="Destellandoo")
 
 def main():
     application = Application.builder().token(token).build()
