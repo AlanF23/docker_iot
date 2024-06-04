@@ -107,7 +107,7 @@ async def graficos(update: Update, context):
         if conn:
             conn.close()
 
-#ACA EMPIEZA LO MIO
+#ACA EMPIEZA LO NUEVO
 
 async def setpoint(update: Update, context):
     logging.info(update.message.text)
@@ -196,7 +196,7 @@ async def destello(update: Update, context):
     ) as client:
         topico = update.message.text
         try:
-            await client.publish(topic=topico, payload=1, qos=1)
+            await client.publish(topic=topico, payload=1, qos=1) #envía un 1, el esp activa el destello
             await context.bot.send_message(update.message.chat.id, text="Destellando")
         except ValueError:
             await context.bot.send_message(update.message.chat.id, text="No se pudo destellar")
@@ -224,31 +224,6 @@ async def rele(update: Update, context):
                 await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de relé válido")
         except ValueError:
             await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de relé valido")
-'''
-async def send_message(context):
-    chat_id = context.job.context
-    context.bot.send_message(chat_id=chat_id, text="Anotarse al come")
-
-async def comedor(update, context):
-    chat_id = update.message.chat_id
-    current_time = datetime.datetime.now().time()
-    
-    if datetime.time(18, 0) <= current_time <= datetime.time(22, 0):
-        # If current time is between 6 PM and 10 PM
-        context.bot.send_message(chat_id=chat_id, text="Sending message as it's between 6 PM and 10 PM")
-    else:
-        # Calculate the time until 6 PM
-        now = datetime.datetime.now()
-        target_time = datetime.datetime.combine(now, datetime.time(18, 0))
-        
-        if now > target_time:
-            target_time += datetime.timedelta(days=1)
-        
-        delay = (target_time - now).total_seconds()
-        
-        context.job_queue.run_once(send_message, delay, context=chat_id)
-        context.bot.send_message(chat_id=chat_id, text="Message scheduled for 6 PM")
-'''
 
 def main():
     application = Application.builder().token(token).build()
@@ -263,7 +238,6 @@ def main():
     application.add_handler(CommandHandler('periodo', periodo))
     application.add_handler(CommandHandler('rele', rele))
     application.add_handler(MessageHandler(filters.Regex("^(destello)$"), destello))
-    #application.add_handler(CommandHandler('come', comedor))
     application.run_polling()
 
 if __name__ == '__main__':
