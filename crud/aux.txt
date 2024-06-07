@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-
+<!--
 <head>
   <meta charset="UTF-8" />
   <title>Formulario IoT</title>
-  <link id="themeStylesheet" rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
+  <link rel="stylesheet" href="https://bootswatch.com/5/cosmo/bootstrap.min.css"> 
+  <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
   {% with messages = get_flashed_messages() %} {% if messages %}
   {% for message in messages %}
   <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -28,6 +27,7 @@
       {% endif %}
     </div>
   </nav>
+
 </head>
 
 <body>
@@ -39,7 +39,19 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <script src="{{url_for('static', filename='js/main.js')}}"></script>
-</body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeSelector = document.getElementById('themeSelector');
+      const currentTheme = localStorage.getItem('theme') || 'dark';
+      
+      document.getElementById('themeStylesheet').setAttribute('href', `https://bootswatch.com/5/${currentTheme}/bootstrap.min.css`);
+      themeSelector.value = currentTheme;
 
-
-</html>
+      themeSelector.addEventListener('change', function () {
+        const selectedTheme = themeSelector.value;
+        localStorage.setItem('theme', selectedTheme);
+        document.getElementById('themeStylesheet').setAttribute('href', `https://bootswatch.com/5/${selectedTheme}/bootstrap.min.css`);
+      });
+    });
+  </script>
+</body> -->
