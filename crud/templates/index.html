@@ -3,13 +3,17 @@
 <div class="row">
   <div class="col-md-7 mx-auto">
     <div class="card card-body">
-      <form action="{{url_for('add_contact')}}" method="POST">
-        <legend>Enviar parámetros</legend>
+      <form action="{{url_for('add_esp')}}" method="POST">
+        <legend>Agregar Dispositivos</legend>
         <div class="form-group">
-          <label class="col-form-label mt-4" for="tel">Setpoint</label>
-          <input type="number" class="form-control" id="setpoint" data-ddg-inputtype="unknown" name="setpoint">
+          <label class="col-form-label mt-4" for="tel">ID del dispositivo</label>
+          <input type="text" class="form-control" id="inputDefault" data-ddg-inputtype="unknown" name="id_sensor">
         </div>
-        <button type="submit" class="btn btn-primary mt-4">setear</button>
+        <div class="form-group">
+          <label class="col-form-label mt-4" for="inputDefault">Nombre del Usuario</label>
+          <input type="text" class="form-control" id="inputDefault" data-ddg-inputtype="unknown" name="nombre">
+        </div>
+        <button type="submit" class="btn btn-primary mt-4">Guardar</button>
       </form>
     </div>
   </div>
@@ -20,23 +24,24 @@
       <thead>
         <tr>
           <th scope="col">ID</th>
-          <th scope="col">Nombre completo</th>
-          <th scope="col">teléfono</th>
-          <th scope="col">Email</th>
-          <th scope="col">acción</th>
+          <th scope="col">ID del sensor</th>
+          <th scope="col">Usuario del ESP32</th>
+          <th scope="col">Enviar parámetros</th>
+          <th scope="col">Editar</th>
+          <th scope="col">Borrar</th>
         </tr>
       </thead>
       <tbody>
-        {% for contacto in contactos %}
+        {% for esp in esps %}
         <tr>
-          <td>{{contacto.0}}</td>
-          <td>{{contacto.1}}</td>
-          <td>{{contacto.2}}</td>
-          <td>{{contacto.3}}</td>
-          <td>
+          <td>{{esp.0}}</td>
+          <td>{{esp.1}}</td>
+          <td>{{esp.2}}</td>
+          <!--<td>
             <a href="{{url_for('conseguir_contacto',id=contacto.0)}}" class="btn btn-secondary">editar</a>
-            <a href="{{url_for('borrar_contacto',id=contacto.0)}}" class="btn btn-danger btn-borrar">borrar</a>
-          </td>
+            <a href="{{url_for('conseguir_contacto',id=esp.0)}}" class="btn btn-secondary">editar</a>
+            <a href="{{url_for('borrar_contacto',id=esp.0)}}" class="btn btn-danger btn-borrar">borrar</a>
+          </td>-->
         </tr>
         {% endfor %}
       </tbody>

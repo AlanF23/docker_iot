@@ -17,7 +17,7 @@ app.secret_key = os.environ["FLASK_SECRET_KEY"]
 app.config["MYSQL_USER"] = os.environ["MYSQL_USER"]
 app.config["MYSQL_PASSWORD"] = os.environ["MYSQL_PASSWORD"]
 app.config["MYSQL_DB"] = os.environ["MYSQL_DB"]
-app.config["MYSQL_HOST"] = os.environ["MYSQL_HOST"]
+app.config["MYSQL_HOST"] = os.environ["MYSQL_HOST"] 
 app.config['PERMANENT_SESSION_LIFETIME']=600
 mysql = MySQL(app)
 
@@ -60,10 +60,10 @@ def login():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("usuario"):
-            return "el campo usuario es oblicatorio"
+            return "el campo usuario es obligatorio"
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return "el campo contraseña es oblicatorio"
+            return "el campo contraseña es obligatorio"
 
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM usuarios WHERE usuario LIKE %s", (request.form.get("usuario"),))
@@ -83,35 +83,34 @@ def login():
 @require_login
 def index():
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contactos')
+    cur.execute('SELECT * FROM esps')
     datos = cur.fetchall()
     cur.close()
-    return render_template('index.html', contactos = datos)
+    return render_template('index.html', esps = datos)
 
-@app.route('/add_contact', methods=['POST'])
+@app.route('/add_esp', methods=['POST'])
 @require_login
-def add_contact():
+def add_esp():
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        tel = request.form['tel']
-        email = request.form['email']
+        id_sensor = request.form['id_sensor']
+        usuario_esp = request.form['nombre']
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO contactos (nombre, tel, email) VALUES (%s,%s,%s)"
-                    , (nombre, tel, email))
+        cur.execute("INSERT INTO esps (id_sensor, usuario_esp) VALUES (%s,%s)"
+                    , (id_sensor, usuario_esp))
         if mysql.connection.affected_rows():
-            flash('Se agregó un contacto')  # usa sesión
-            logging.info("se agregó un contacto")
+            flash('Se agregó un dispositivo')  # usa sesión
+            logging.info("se agregó un dispositivo")
             mysql.connection.commit()
     return redirect(url_for('index'))
 
 @app.route('/borrar/<string:id>', methods = ['GET'])
 @require_login
-def borrar_contacto(id):
+def borrar_esp(id):
     cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM contactos WHERE id = {0}'.format(id))
+    cur.execute('DELETE FROM esps WHERE id = {0}'.format(id))
     if mysql.connection.affected_rows():
-        flash('Se eliminó un contacto')  # usa sesión
-        logging.info("se eliminó un contacto")
+        flash('Se eliminó un dispositivo')  # usa sesión
+        logging.info("se eliminó undispositivo")
         mysql.connection.commit()
     return redirect(url_for('index'))
 
@@ -119,7 +118,7 @@ def borrar_contacto(id):
 @require_login
 def conseguir_contacto(id):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contactos WHERE id = %s', (id,))
+    cur.execute('SELECT * FROM esps WHERE id = %s', (id,))
     datos = cur.fetchone()
     logging.info(datos)
     return render_template('editar-contacto.html', contacto = datos)
