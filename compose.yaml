@@ -150,5 +150,8 @@ services:
     volumes:
       - ./node-red:/data
     restart: unless-stopped
+    enviroment:
+      - MQTT_USR=${MQTT_USR}
+      - MQTT_PASS=${MQTT_PASS}
 volumes:
   portainer_data:
