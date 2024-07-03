@@ -4,6 +4,8 @@ import os, logging
 from functools import wraps
 from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
+import ssl, certifi, json, traceback
+import aiomqtt, asyncio
 
 logging.basicConfig(format='%(asctime)s - CRUD - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -87,6 +89,28 @@ def index():
     datos = cur.fetchall()
     cur.close()
     return render_template('index.html', esps = datos)
+
+async def main():
+    tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    tls_context.verify_mode = ssl.CERT_REQUIRED
+    tls_context.check_hostname = True
+    tls_context.load_default_certs()
+
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        username=os.environ["MQTT_USR"],
+        password=os.environ["MQTT_PASS"],
+        port=int(os.environ["PUERTO_MQTTS"]),
+        tls_context=tls_context,
+    ) as client:
+        #ver si se presiono el boton de enviar setpoint 
+        #los ids de los esp son de pruebas
+        if request.method == 'POST' and 'setbotton' in request.form:
+            await client.publish(topic=str(request.form['esp'])+'/setpoint', payload=str(request.form['setpoint']) , qos=1)
+            logging.info('setpoint: '+str(request.form['setpoint'])+': '+str(request.form['esp']))
+        else:
+            await client.publish(topic=str(request.form['esp'])+'/destello', payload='ON', qos=1)
+            logging.info('destello: '+'ON'+': '+str(request.form['esp']))
 
 @app.route('/add_esp', methods=['POST'])
 @require_login

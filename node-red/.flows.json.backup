@@ -1,0 +1,999 @@
+[
+    {
+        "id": "8b6271f93301dcc8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6015b2b6d8c87bb5",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "933f08cbe7f57fd9",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "eaeb4c8a79a68cbf",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "IOTUNAM",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "${INFLUX_SERVER}",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "95ef4f0c2c6d2cb9",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "${SERVIDOR}",
+        "port": "10863",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "496824aa7e6c3009",
+        "type": "telegram bot",
+        "botname": "IOT",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "0a0d01f9736314f8",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f8891741af153f5e",
+        "type": "ui_group",
+        "name": "izquierdo",
+        "tab": "0a0d01f9736314f8",
+        "order": 1,
+        "disp": true,
+        "width": "11",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e09e9be4ce487bf7",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "showPageTitle": true,
+        "navigationStyle": "default",
+        "titleBarStyle": "default"
+    },
+    {
+        "id": "f1c17e28ef3df648",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "f0a09aa4bb8ff3f8",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "e09e9be4ce487bf7",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "f1c17e28ef3df648",
+        "order": 1,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "dea4ad550cc596f8",
+        "type": "ui-group",
+        "name": "Group1",
+        "page": "f0a09aa4bb8ff3f8",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "bd20c25456a08a08",
+        "type": "ui-group",
+        "name": "Group2",
+        "page": "f0a09aa4bb8ff3f8",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "40c03e71b58d8242",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "f85f5e1595104c15",
+        "type": "ui_group",
+        "name": "Derecho",
+        "tab": "0a0d01f9736314f8",
+        "order": 2,
+        "disp": true,
+        "width": "11",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3488296c518fd0a1",
+        "type": "debug",
+        "z": "8b6271f93301dcc8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "f964c7938e4840a9",
+        "type": "mqtt in",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "topic": "/sensores_remotos/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "95ef4f0c2c6d2cb9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "18be4a929473d5c8",
+                "3488296c518fd0a1",
+                "37ba0c1e2dd9a341",
+                "0d16e1e5fd06fded"
+            ]
+        ]
+    },
+    {
+        "id": "18be4a929473d5c8",
+        "type": "function",
+        "z": "8b6271f93301dcc8",
+        "name": "function 1",
+        "func": "msg.payload = [msg.payload]\nmsg.payload.push({\"node\":msg.topic.split('/')[1]})\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "baa0236f0e263741",
+                "97cb06bc962ef21f"
+            ]
+        ]
+    },
+    {
+        "id": "baa0236f0e263741",
+        "type": "debug",
+        "z": "8b6271f93301dcc8",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "49ecd1866f0c08b7",
+        "type": "debug",
+        "z": "8b6271f93301dcc8",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "37ba0c1e2dd9a341",
+        "type": "function",
+        "z": "8b6271f93301dcc8",
+        "name": "seleccion temperatura",
+        "func": "msg.payload = msg.payload.temperatura;\nmsg.topic = msg.topic.split('/')[1];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 280,
+        "wires": [
+            [
+                "e418822203b4f334"
+            ]
+        ]
+    },
+    {
+        "id": "97cb06bc962ef21f",
+        "type": "influxdb out",
+        "z": "8b6271f93301dcc8",
+        "influxdb": "eaeb4c8a79a68cbf",
+        "name": "",
+        "measurement": "mediciones",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "unam",
+        "bucket": "sensores_remotos",
+        "x": 540,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "86fb8b69734e779e",
+        "type": "ui_switch",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "label": "LED Remoto",
+        "tooltip": "",
+        "group": "f8891741af153f5e",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "2ffaddbd4b11baaa"
+            ]
+        ]
+    },
+    {
+        "id": "20a4f4953c2fb008",
+        "type": "ui_led",
+        "z": "8b6271f93301dcc8",
+        "order": 1,
+        "group": "f85f5e1595104c15",
+        "width": 0,
+        "height": 0,
+        "label": "",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "0",
+                "valueType": "num"
+            },
+            {
+                "color": "#008000",
+                "value": "1",
+                "valueType": "num"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 350,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "0d16e1e5fd06fded",
+        "type": "function",
+        "z": "8b6271f93301dcc8",
+        "name": "seelccion humedad",
+        "func": "msg.payload = msg.payload.humedad;\nmsg.topic = msg.topic.split('/')[1];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 380,
+        "wires": [
+            [
+                "11c4cbf895dd222f"
+            ]
+        ]
+    },
+    {
+        "id": "e418822203b4f334",
+        "type": "ui_gauge",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "group": "f8891741af153f5e",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperatura",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "45",
+        "colors": [
+            "#81edef",
+            "#50e600",
+            "#f83f3f"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 550,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "11c4cbf895dd222f",
+        "type": "ui_gauge",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "group": "f85f5e1595104c15",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Humedad",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#e1f9f9",
+            "#00e4f5",
+            "#3835ed"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 540,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "2ffaddbd4b11baaa",
+        "type": "mqtt out",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "topic": "/switch_led/",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "95ef4f0c2c6d2cb9",
+        "x": 310,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d55195261c20569f",
+        "type": "mqtt in",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "topic": "/estado",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "95ef4f0c2c6d2cb9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 540,
+        "wires": [
+            [
+                "20a4f4953c2fb008"
+            ]
+        ]
+    },
+    {
+        "id": "07e281fb4619c153",
+        "type": "telegram sender",
+        "z": "6015b2b6d8c87bb5",
+        "name": "",
+        "bot": "496824aa7e6c3009",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 470,
+        "y": 160,
+        "wires": [
+            [
+                "bba0e960326ce5ca"
+            ]
+        ]
+    },
+    {
+        "id": "bba0e960326ce5ca",
+        "type": "debug",
+        "z": "6015b2b6d8c87bb5",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a904da2f515a5f2e",
+        "type": "telegram command",
+        "z": "6015b2b6d8c87bb5",
+        "name": "",
+        "command": "/start",
+        "description": "",
+        "registercommand": false,
+        "language": "",
+        "scope": "default",
+        "bot": "496824aa7e6c3009",
+        "strict": false,
+        "hasresponse": false,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 1,
+        "x": 50,
+        "y": 220,
+        "wires": [
+            [
+                "d26610136ee167bd"
+            ]
+        ]
+    },
+    {
+        "id": "6ab9249c826b8ad2",
+        "type": "catch",
+        "z": "6015b2b6d8c87bb5",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 300,
+        "y": 20,
+        "wires": [
+            [
+                "0aad0dd78b5a5cb8"
+            ]
+        ]
+    },
+    {
+        "id": "0aad0dd78b5a5cb8",
+        "type": "debug",
+        "z": "6015b2b6d8c87bb5",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "d26610136ee167bd",
+        "type": "function",
+        "z": "6015b2b6d8c87bb5",
+        "name": "function 2",
+        "func": "var opts = {\n    reply_markup: JSON.stringify({\n        keyboard: [\n            ['Temperatura'],['a']],\n        'resize_keyboard': true,\n        'one_time_keyboard': false\n    })\n};\n\nmsg.error = false;\nmsg.payload.content = 'Bienvenido';\nmsg.payload.options = opts;\nmsg.payload.type = \"message\";\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 220,
+        "wires": [
+            [
+                "07e281fb4619c153"
+            ]
+        ]
+    },
+    {
+        "id": "bfe4b33de75fef87",
+        "type": "telegram receiver",
+        "z": "6015b2b6d8c87bb5",
+        "name": "",
+        "bot": "496824aa7e6c3009",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 90,
+        "y": 340,
+        "wires": [
+            [
+                "9c57909a781a3f88",
+                "07e98eaaacb5e7b9"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "9c57909a781a3f88",
+        "type": "switch",
+        "z": "6015b2b6d8c87bb5",
+        "name": "",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Temperatura",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 270,
+        "y": 320,
+        "wires": [
+            [
+                "7e2517be6127b2d3"
+            ]
+        ]
+    },
+    {
+        "id": "7e2517be6127b2d3",
+        "type": "influxdb in",
+        "z": "6015b2b6d8c87bb5",
+        "influxdb": "eaeb4c8a79a68cbf",
+        "name": "",
+        "query": "from(bucket: \"sensores_remotos\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mediciones\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperatura\")\n  |> last()",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "unam",
+        "x": 440,
+        "y": 320,
+        "wires": [
+            [
+                "9a261798918f89e7"
+            ]
+        ]
+    },
+    {
+        "id": "9a261798918f89e7",
+        "type": "function",
+        "z": "6015b2b6d8c87bb5",
+        "name": "function 3",
+        "func": "const d = new Date(msg.payload[0]._time);\nmsg.payload = {\n    chatId: msg.originalMessage.chat.id,\n    type: 'message',\n    content: \"temperatura actual\\n\" + parseFloat(parseFloat(\n        msg.payload[0]._value).toFixed(2)).toLocaleString(\n        \"es-AR\") + \" °C\\nmedido a las \" + d.toLocaleTimeString(\n            'es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }) + \" h\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 260,
+        "wires": [
+            [
+                "07e281fb4619c153"
+            ]
+        ]
+    },
+    {
+        "id": "07e98eaaacb5e7b9",
+        "type": "debug",
+        "z": "6015b2b6d8c87bb5",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3ca788a51b096ffa",
+        "type": "telegram sender",
+        "z": "933f08cbe7f57fd9",
+        "name": "",
+        "bot": "496824aa7e6c3009",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 545,
+        "y": 167,
+        "wires": [
+            [
+                "db95a91782e4e738"
+            ]
+        ]
+    },
+    {
+        "id": "783519258dc71d6a",
+        "type": "inject",
+        "z": "933f08cbe7f57fd9",
+        "name": "bot come",
+        "props": [
+            {
+                "p": "payload.chatId",
+                "v": "-1001688137008",
+                "vt": "num"
+            },
+            {
+                "p": "payload.type",
+                "v": "message",
+                "vt": "str"
+            },
+            {
+                "p": "payload.content",
+                "v": "Anotense al comedor",
+                "vt": "str"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 160,
+        "wires": [
+            [
+                "3ca788a51b096ffa"
+            ]
+        ]
+    },
+    {
+        "id": "db95a91782e4e738",
+        "type": "debug",
+        "z": "933f08cbe7f57fd9",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 745,
+        "y": 187,
+        "wires": []
+    },
+    {
+        "id": "2136a4694286374b",
+        "type": "catch",
+        "z": "933f08cbe7f57fd9",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 345,
+        "y": 27,
+        "wires": [
+            [
+                "8ea853109fb89aec"
+            ]
+        ]
+    },
+    {
+        "id": "8ea853109fb89aec",
+        "type": "debug",
+        "z": "933f08cbe7f57fd9",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 545,
+        "y": 27,
+        "wires": []
+    },
+    {
+        "id": "e840f9275416e42a",
+        "type": "telegram receiver",
+        "z": "933f08cbe7f57fd9",
+        "name": "",
+        "bot": "496824aa7e6c3009",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 170,
+        "y": 400,
+        "wires": [
+            [
+                "94724d441731b339"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "94724d441731b339",
+        "type": "switch",
+        "z": "933f08cbe7f57fd9",
+        "name": "",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Temperatura",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 305,
+        "y": 327,
+        "wires": [
+            [
+                "298ae0e0316ae91b"
+            ]
+        ]
+    },
+    {
+        "id": "298ae0e0316ae91b",
+        "type": "influxdb in",
+        "z": "933f08cbe7f57fd9",
+        "influxdb": "eaeb4c8a79a68cbf",
+        "name": "",
+        "query": "from(bucket: \"sensores_remotos\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mediciones\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperatura\")\n  |> last()",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "unam",
+        "x": 505,
+        "y": 327,
+        "wires": [
+            [
+                "5c54f6cafa046e6e"
+            ]
+        ]
+    },
+    {
+        "id": "5c54f6cafa046e6e",
+        "type": "function",
+        "z": "933f08cbe7f57fd9",
+        "name": "function 5",
+        "func": "const d = new Date(msg.payload[0]._time);\nmsg.payload = {\n    chatId: msg.originalMessage.chat.id,\n    type: 'message',\n    content: \"temperatura actual\\n\" + parseFloat(parseFloat(\n        msg.payload[0]._value).toFixed(2)).toLocaleString(\n        \"es-AR\") + \" °C\\nmedido a las \" + d.toLocaleTimeString(\n            'es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }) + \" h\"\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 645,
+        "y": 267,
+        "wires": [
+            [
+                "3ca788a51b096ffa"
+            ]
+        ]
+    }
+]
