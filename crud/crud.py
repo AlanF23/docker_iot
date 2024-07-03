@@ -84,47 +84,96 @@ def login():
 @app.route('/')
 @require_login
 def index():
-    return render_template('index.html')
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM esps')
+    datos = cur.fetchall()
+    cur.close()
+    return render_template('index.html', esps = datos)
 
-async def main():
-    tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    tls_context.verify_mode = ssl.CERT_REQUIRED
-    tls_context.check_hostname = True
-    tls_context.load_default_certs()
-
-    async with aiomqtt.Client(
-        os.environ["SERVIDOR"],
-        username=os.environ["MQTT_USR"],
-        password=os.environ["MQTT_PASS"],
-        port=int(os.environ["PUERTO_MQTTS"]),
-        tls_context=tls_context,
-    ) as client:
-        #ver si se presiono el boton de enviar setpoint 
-        #los ids de los esp son de pruebas
-        if request.method == 'POST' and 'setbotton' in request.form:
-            await client.publish(topic=str(request.form['esp'])+'/setpoint', payload=str(request.form['setpoint']) , qos=1)
-            logging.info('setpoint: '+str(request.form['setpoint'])+': '+str(request.form['esp']))
-        else:
-            await client.publish(topic=str(request.form['esp'])+'/destello', payload='ON', qos=1)
-            logging.info('destello: '+'ON'+': '+str(request.form['esp']))
-
-@app.route('/topico', methods=['GET','POST'])
+@app.route('/enviar_mqtt', methods=['POST'])
 @require_login
-def topico():
+def enviar_mqtt():
     if request.method == 'POST':
-        if not request.form.get("esp"):
-            return 'Seleccionar un nodo es obligatorio'
-        asyncio.run(main()) 
+        esp = request.form['esp']
+        action = request.form['action']
+        
+        async def publish_message(topic, payload):
+            tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            tls_context.verify_mode = ssl.CERT_REQUIRED
+            tls_context.check_hostname = True
+            tls_context.load_default_certs()
+
+            async with aiomqtt.Client(
+                os.environ["SERVIDOR"],
+                username=os.environ["MQTT_USR"],
+                password=os.environ["MQTT_PASS"],
+                port=int(os.environ["PUERTO_MQTTS"]),
+                tls_context=tls_context,
+            ) as client:
+                await client.publish(topic=topic, payload=payload, qos=1)
+                logging.info(f'Setpoint/Destello enviado: {payload} para ESP: {esp} en tópico: {topic}')
+        
+        if action == 'setpoint':
+            setpoint = request.form['setpoint']
+            topic = f'{esp}/setpoint'
+            payload = setpoint
+        elif action == 'destello':
+            topic = f'{esp}/destello'
+            payload = 'ON'
+
+        asyncio.run(publish_message(topic, payload))
+        flash(f'Setpoint/Destello enviado: {payload} para ESP: {esp}')
+    
     return redirect(url_for('index'))
 
-@app.route('/tema', methods=['GET','POST'])
+
+@app.route('/add_esp', methods=['POST'])
 @require_login
-def tema():
+def add_esp():
     if request.method == 'POST':
-        if not request.form.get("temas"):
-            return 'Seleccionar un tema'
-        session["theme"]=request.form.get("temas")
-        logging.info("se establecio el tema: "+ request.form.get("temas"))
+        id_sensor = request.form['id_sensor']
+        usuario_esp = request.form['nombre']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO esps (id_sensor, usuario_esp) VALUES (%s,%s)"
+                    , (id_sensor, usuario_esp))
+        if mysql.connection.affected_rows():
+            flash('Se agregó un dispositivo')  # usa sesión
+            logging.info("se agregó un dispositivo")
+            mysql.connection.commit()
+    return redirect(url_for('index'))
+
+@app.route('/borrar/<string:id>', methods = ['GET'])
+@require_login
+def borrar_esp(id):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM esps WHERE id = {0}'.format(id))
+    if mysql.connection.affected_rows():
+        flash('Se eliminó un dispositivo')  # usa sesión
+        logging.info("se eliminó un dispositivo")
+        mysql.connection.commit()
+    return redirect(url_for('index'))
+
+@app.route('/editar/<id>', methods = ['GET'])
+@require_login
+def conseguir_contacto(id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM esps WHERE id = %s', (id,))
+    datos = cur.fetchone()
+    logging.info(datos)
+    return render_template('editar-contacto.html', esp = datos)
+
+@app.route('/actualizar/<id>', methods=['POST'])
+@require_login
+def actualizar_contacto(id):
+    if request.method == 'POST':
+        id_sensor = request.form['id sensor']
+        usuario_esp = request.form['nombre']
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE esps SET id_sensor=%s, usuario_esp=%s WHERE id=%s", (id_sensor, usuario_esp, id))
+    if mysql.connection.affected_rows():
+        flash('Se actualizó un esp')  # usa sesión
+        logging.info("se actualizó un esp")
+        mysql.connection.commit()
     return redirect(url_for('index'))
 
 @app.route("/logout")

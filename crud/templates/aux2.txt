@@ -1,3 +1,6 @@
+
+
+
 {% extends "layout.html" %}
 {% block body %}
 <div class="row">
@@ -37,19 +40,14 @@
         <tbody>
           {% for esp in esps %}
           <tr>
-            <form action="{{url_for('enviar_mqtt')}}" method="POST">
-              <td>{{esp.0}}</td>
-              <td>{{esp.1}}</td>
-              <td>{{esp.2}}</td>
-              <td>
-                <input type="number" class="form-control" id="setpoint-{{esp.0}}" name="setpoint" min="1" max="100" step="0.01">
-                <input type="hidden" name="esp" value="{{esp.1}}">
-              </td>
-              <td><button type="submit" class="btn btn-secondary" name="action" value="setpoint">Enviar Setpoint</button></td>
-              <td><button type="submit" class="btn btn-secondary" name="action" value="destello">Enviar Destello</button></td>
-              <td><a href="{{url_for('conseguir_contacto',id=esp.0)}}" class="btn btn-secondary">editar</a></td>
-              <td><a href="{{url_for('borrar_esp',id=esp.0)}}" class="btn btn-danger btn-borrar">borrar</a></td>
-            </form>
+            <td>{{esp.0}}</td>
+            <td>{{esp.1}}</td>
+            <td>{{esp.2}}</td>
+            <td><input type="number" class="form-control" id="number" name="setpoint" min="1" max="100" step="0.01"></td>
+            <td><button type="submit" class="btn btn-secondary" name="setbotton">Enviar Setpoint</button></td>
+            <td><button type="submit" class="btn btn-secondary" name="setbotton">Enviar Destello</button></td>
+            <td><a href="{{url_for('conseguir_contacto',id=esp.0)}}" class="btn btn-secondary">editar</a></td> 
+            <td><a href="{{url_for('borrar_esp',id=esp.0)}}" class="btn btn-danger btn-borrar">borrar</a></td>
           </tr>
           {% endfor %}
         </tbody>
