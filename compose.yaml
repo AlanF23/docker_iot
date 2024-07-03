@@ -177,7 +177,7 @@ services:
       - TZ=America/Argentina/Buenos_Aires
       - SERVERURL=${DOMINIO}
       - SERVERPORT=${PUERTO}
-      - PEERS=alan,peer2   #cambiar
+      - PEERS=alancelu,compu   #cambiar
       - PEERDNS=auto
       - INTERNAL_SUBNET=10.13.14.0 #optional
       - ALLOWEDIPS=0.0.0.0/0
