@@ -4,6 +4,8 @@ import os, logging
 from functools import wraps
 from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash, generate_password_hash
+import ssl, certifi, json, traceback
+import aiomqtt, asyncio
 
 logging.basicConfig(format='%(asctime)s - CRUD - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -82,61 +84,47 @@ def login():
 @app.route('/')
 @require_login
 def index():
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contactos')
-    datos = cur.fetchall()
-    cur.close()
-    return render_template('index.html', contactos = datos)
+    return render_template('index.html')
 
-@app.route('/add_contact', methods=['POST'])
+async def main():
+    tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    tls_context.verify_mode = ssl.CERT_REQUIRED
+    tls_context.check_hostname = True
+    tls_context.load_default_certs()
+
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        username=os.environ["MQTT_USR"],
+        password=os.environ["MQTT_PASS"],
+        port=int(os.environ["PUERTO_MQTTS"]),
+        tls_context=tls_context,
+    ) as client:
+        #ver si se presiono el boton de enviar setpoint 
+        #los ids de los esp son de pruebas
+        if request.method == 'POST' and 'setbotton' in request.form:
+            await client.publish(topic=str(request.form['esp'])+'/setpoint', payload=str(request.form['setpoint']) , qos=1)
+            logging.info('setpoint: '+str(request.form['setpoint'])+': '+str(request.form['esp']))
+        else:
+            await client.publish(topic=str(request.form['esp'])+'/destello', payload='ON', qos=1)
+            logging.info('destello: '+'ON'+': '+str(request.form['esp']))
+
+@app.route('/topico', methods=['GET','POST'])
 @require_login
-def add_contact():
+def topico():
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        tel = request.form['tel']
-        email = request.form['email']
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO contactos (nombre, tel, email) VALUES (%s,%s,%s)"
-                    , (nombre, tel, email))
-        if mysql.connection.affected_rows():
-            flash('Se agregó un contacto')  # usa sesión
-            logging.info("se agregó un contacto")
-            mysql.connection.commit()
+        if not request.form.get("esp"):
+            return 'Seleccionar un nodo es obligatorio'
+        asyncio.run(main()) 
     return redirect(url_for('index'))
 
-@app.route('/borrar/<string:id>', methods = ['GET'])
+@app.route('/tema', methods=['GET','POST'])
 @require_login
-def borrar_contacto(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM contactos WHERE id = {0}'.format(id))
-    if mysql.connection.affected_rows():
-        flash('Se eliminó un contacto')  # usa sesión
-        logging.info("se eliminó un contacto")
-        mysql.connection.commit()
-    return redirect(url_for('index'))
-
-@app.route('/editar/<id>', methods = ['GET'])
-@require_login
-def conseguir_contacto(id):
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM contactos WHERE id = %s', (id,))
-    datos = cur.fetchone()
-    logging.info(datos)
-    return render_template('editar-contacto.html', contacto = datos)
-
-@app.route('/actualizar/<id>', methods=['POST'])
-@require_login
-def actualizar_contacto(id):
+def tema():
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        tel = request.form['tel']
-        email = request.form['email']
-        cur = mysql.connection.cursor()
-        cur.execute("UPDATE contactos SET nombre=%s, tel=%s, email=%s WHERE id=%s", (nombre, tel, email, id))
-    if mysql.connection.affected_rows():
-        flash('Se actualizó un contacto')  # usa sesión
-        logging.info("se actualizó un contacto")
-        mysql.connection.commit()
+        if not request.form.get("temas"):
+            return 'Seleccionar un tema'
+        session["theme"]=request.form.get("temas")
+        logging.info("se establecio el tema: "+ request.form.get("temas"))
     return redirect(url_for('index'))
 
 @app.route("/logout")
