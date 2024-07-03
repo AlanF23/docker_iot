@@ -66,7 +66,7 @@ def login():
         # Ensure password was submitted
         elif not request.form.get("password"):
             return "el campo contraseña es obligatorio"
-
+        
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM usuarios WHERE usuario LIKE %s", (request.form.get("usuario"),))
         rows=cur.fetchone()
