@@ -331,9 +331,7 @@
         "wires": [
             [
                 "18be4a929473d5c8",
-                "3488296c518fd0a1",
-                "37ba0c1e2dd9a341",
-                "0d16e1e5fd06fded"
+                "3488296c518fd0a1"
             ]
         ]
     },
@@ -374,26 +372,6 @@
         "x": 580,
         "y": 140,
         "wires": []
-    },
-    {
-        "id": "37ba0c1e2dd9a341",
-        "type": "function",
-        "z": "8b6271f93301dcc8",
-        "name": "seleccion temperatura",
-        "func": "msg.payload = msg.payload.temperatura;\nmsg.topic = msg.topic.split('/')[1];\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 280,
-        "wires": [
-            [
-                "e418822203b4f334"
-            ]
-        ]
     },
     {
         "id": "97cb06bc962ef21f",
@@ -479,54 +457,6 @@
         "wires": []
     },
     {
-        "id": "0d16e1e5fd06fded",
-        "type": "function",
-        "z": "8b6271f93301dcc8",
-        "name": "seelccion humedad",
-        "func": "msg.payload = msg.payload.humedad;\nmsg.topic = msg.topic.split('/')[1];\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 350,
-        "y": 340,
-        "wires": [
-            [
-                "0e304030413d3d35"
-            ]
-        ]
-    },
-    {
-        "id": "e418822203b4f334",
-        "type": "ui_gauge",
-        "z": "8b6271f93301dcc8",
-        "name": "",
-        "group": "f8891741af153f5e",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Temperatura",
-        "label": "units",
-        "format": "{{value}}",
-        "min": "-10",
-        "max": "45",
-        "colors": [
-            "#81edef",
-            "#50e600",
-            "#f83f3f"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 550,
-        "y": 280,
-        "wires": []
-    },
-    {
         "id": "11c4cbf895dd222f",
         "type": "ui_gauge",
         "z": "8b6271f93301dcc8",
@@ -550,7 +480,7 @@
         "seg2": "",
         "diff": false,
         "className": "",
-        "x": 660,
+        "x": 760,
         "y": 420,
         "wires": []
     },
@@ -616,7 +546,7 @@
         "id": "d63bef7efb1663b7",
         "type": "function",
         "z": "8b6271f93301dcc8",
-        "name": "function 6",
+        "name": "selección_humedad",
         "func": "msg.payload = {\n    value: parseFloat(parseFloat(msg.payload[0]._value).toFixed(2))\n}\nreturn msg.payload;",
         "outputs": 1,
         "timeout": 0,
@@ -624,7 +554,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 520,
+        "x": 560,
         "y": 420,
         "wires": [
             [
@@ -633,40 +563,12 @@
         ]
     },
     {
-        "id": "0e304030413d3d35",
-        "type": "ui_gauge",
-        "z": "8b6271f93301dcc8",
-        "name": "",
-        "group": "f85f5e1595104c15",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "gtype": "gage",
-        "title": "Humedad",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#e1f9f9",
-            "#00e4f5",
-            "#3835ed"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 560,
-        "y": 340,
-        "wires": []
-    },
-    {
         "id": "51643292ffc6679d",
         "type": "inject",
         "z": "8b6271f93301dcc8",
         "name": "",
         "props": [],
-        "repeat": "",
+        "repeat": "1",
         "crontab": "",
         "once": true,
         "onceDelay": 0.1,
@@ -675,9 +577,77 @@
         "y": 400,
         "wires": [
             [
-                "19038474141bc27d"
+                "19038474141bc27d",
+                "3d552a48f6ed11c5"
             ]
         ]
+    },
+    {
+        "id": "3d552a48f6ed11c5",
+        "type": "influxdb in",
+        "z": "8b6271f93301dcc8",
+        "influxdb": "eaeb4c8a79a68cbf",
+        "name": "",
+        "query": "from(bucket: \"sensores_remotos\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"mediciones\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperatura\")\n  |> last()",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "unam",
+        "x": 340,
+        "y": 360,
+        "wires": [
+            [
+                "85601ccbfba774e6"
+            ]
+        ]
+    },
+    {
+        "id": "85601ccbfba774e6",
+        "type": "function",
+        "z": "8b6271f93301dcc8",
+        "name": "selección_temperatura",
+        "func": "msg.payload = {\n    value: parseFloat(parseFloat(msg.payload[0]._value).toFixed(2))\n}\nreturn msg.payload;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 360,
+        "wires": [
+            [
+                "acc3fb2686952426"
+            ]
+        ]
+    },
+    {
+        "id": "acc3fb2686952426",
+        "type": "ui_gauge",
+        "z": "8b6271f93301dcc8",
+        "name": "",
+        "group": "f8891741af153f5e",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperatura",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-10",
+        "max": "45",
+        "colors": [
+            "#81edef",
+            "#50e600",
+            "#f83f3f"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 770,
+        "y": 360,
+        "wires": []
     },
     {
         "id": "07e281fb4619c153",
@@ -772,7 +742,7 @@
         "type": "function",
         "z": "6015b2b6d8c87bb5",
         "name": "function 2",
-        "func": "var opts = {\n    reply_markup: JSON.stringify({\n        keyboard: [\n            ['Temperatura'],['a']],\n        'resize_keyboard': true,\n        'one_time_keyboard': false\n    })\n};\n\nmsg.error = false;\nmsg.payload.content = 'Bienvenido';\nmsg.payload.options = opts;\nmsg.payload.type = \"message\";\n\nreturn msg;",
+        "func": "\nmsg.error = false;\nmsg.payload.content = 'Bienvenido';\nmsg.payload.type = \"message\";\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
