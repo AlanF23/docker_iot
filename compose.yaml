@@ -1,0 +1,10 @@
+version: "3"
+services:
+  clientemqtt:
+    image: clientemqtt
+    container_name: cliente_mqtt
+    environment:
+      - TZ=America/Argentina/Buenos_Aires
+      - SERVIDOR=${SERVIDOR}
+      - TOPICO=${TOPICO}
+    restart: unless-stopped
