@@ -1,8 +1,11 @@
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
-import logging, os, asyncio, aiomysql, traceback, locale
+import logging, os, asyncio, aiomysql, traceback, locale, json
 import matplotlib.pyplot as plt
 from io import BytesIO
+import aiomqtt
+import datetime
+import time
 
 token=os.environ["TB_TOKEN"]
 
@@ -18,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         apellido=update.message.from_user.last_name
     else:
         apellido=""
-    kb = [["temperatura"],["turbidez"],["gráfico temperatura"],["gráfico turbidez"]]
+    kb = [["temperatura"],["turbidez"],["gráfico temperatura"],["gráfico turbidez"], ["destello"]]
     await context.bot.send_message(update.message.chat.id, text="Bienvenido al Bot "+ nombre + " " + apellido,reply_markup=ReplyKeyboardMarkup(kb))
 
 async def acercade(update: Update, context):
@@ -72,12 +75,119 @@ async def graficos(update: Update, context):
         buffer.close()
     conn.close()
 
+#ACA ARRANCAN LOS ACTUADORES DEL BOT
+async def setpoint_temperatura(update: Update, context):
+    logging.info(update.message.text)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if float(context.args[0]) > 0.0 and float(context.args[0]) < 40.0:
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Valor de temperatura seteado en {}".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+
+async def setpoint_turbidez(update: Update, context):
+    logging.info(update.message.text)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if float(context.args[0]) > 0.0 and float(context.args[0]) < 3000.0:
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Valor de turbidez seteado en {}".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+
+async def modo(update: Update, context):
+    logging.info(context.args)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if context.args and (context.args[0] == 'auto' or context.args[0] == 'manual'):
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Modo actual: {}".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un modo válido")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un modo valido")
+
+async def periodo(update: Update, context):
+    logging.info(context.args)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if float(context.args[0]) > 0.0 and float(context.args[0]) < 60.0:
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Periodo seteado en {} segundos".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de periodo")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de periodo")
+
+async def destello(update: Update, context):
+    logging.info(update.message.text)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text
+        try:
+            await client.publish(topic=topico, payload=1, qos=1) #envía un 1, el esp activa el destello
+            await context.bot.send_message(update.message.chat.id, text="Destellando")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="No se pudo destellar")
+
+async def rele(update: Update, context):
+    logging.info(context.args)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if context.args and (context.args[0] == 'encendido' or context.args[0] == 'apagado'):
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Estado relé: {}".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de relé válido")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de relé valido")
+
+
 def main():
     application = Application.builder().token(token).build()
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('acercade', acercade))
     application.add_handler(MessageHandler(filters.Regex("^(temperatura|turbidez)$"), medicion))
     application.add_handler(MessageHandler(filters.Regex("^(gráfico temperatura|gráfico turbidez)$"), graficos))
+
+    application.add_handler(CommandHandler('setpointtemperatura', setpoint_temperatura))
+    application.add_handler(CommandHandler('setpointturbidez', setpoint_turbidez))
+    application.add_handler(CommandHandler('modo', modo))
+    application.add_handler(CommandHandler('periodo', periodo))
+    application.add_handler(CommandHandler('rele', rele))
+    application.add_handler(MessageHandler(filters.Regex("^(destello)$"), destello))
     application.run_polling()
 
 if __name__ == '__main__':
