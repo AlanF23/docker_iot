@@ -21,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         apellido=update.message.from_user.last_name
     else:
         apellido=""
-    kb = [["temperatura"],["turbidez"],["gráfico temperatura"],["gráfico turbidez"], ["destello"]]
+    kb = [["temperatura"],["turbidez"],["gráfico temperatura"],["gráfico turbidez"], ["alimentar"]]
     await context.bot.send_message(update.message.chat.id, text="Bienvenido al Bot "+ nombre + " " + apellido,reply_markup=ReplyKeyboardMarkup(kb))
 
 async def acercade(update: Update, context):
@@ -144,7 +144,7 @@ async def periodo(update: Update, context):
         except ValueError:
             await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de periodo")
 
-async def destello(update: Update, context):
+async def alimentar(update: Update, context):
     logging.info(update.message.text)
     async with aiomqtt.Client(
         os.environ["SERVIDOR"],
@@ -153,11 +153,11 @@ async def destello(update: Update, context):
         topico = update.message.text
         try:
             await client.publish(topic=topico, payload=1, qos=1) #envía un 1, el esp activa el destello
-            await context.bot.send_message(update.message.chat.id, text="Destellando")
+            await context.bot.send_message(update.message.chat.id, text="Alimentando")
         except ValueError:
-            await context.bot.send_message(update.message.chat.id, text="No se pudo destellar")
+            await context.bot.send_message(update.message.chat.id, text="No se pudo alimentar")
 
-async def rele(update: Update, context):
+async def ventilador(update: Update, context):
     logging.info(context.args)
     async with aiomqtt.Client(
         os.environ["SERVIDOR"],
@@ -168,12 +168,45 @@ async def rele(update: Update, context):
         try:
             if context.args and (context.args[0] == 'encendido' or context.args[0] == 'apagado'):
                 await client.publish(topic=topico, payload=context.args[0] , qos=1)
-                await context.bot.send_message(update.message.chat.id, text="Estado relé: {}".format(context.args[0]))
+                await context.bot.send_message(update.message.chat.id, text="Estado ventilador: {}".format(context.args[0]))
             else:
-                await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de relé válido")
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de ventilador válido")
         except ValueError:
-            await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de relé valido")
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de ventilador valido")
 
+async def calentador(update: Update, context):
+    logging.info(context.args)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if context.args and (context.args[0] == 'encendido' or context.args[0] == 'apagado'):
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Estado calentador: {}".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de calentador válido")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de calentador valido")
+
+async def filtro(update: Update, context):
+    logging.info(context.args)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text.split()[0]
+        topico=topico[1:]
+        try:
+            if context.args and (context.args[0] == 'encendido' or context.args[0] == 'apagado'):
+                await client.publish(topic=topico, payload=context.args[0] , qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Estado filtro: {}".format(context.args[0]))
+            else:
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de filtro válido")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un estado de filtro valido")
 
 def main():
     application = Application.builder().token(token).build()
@@ -186,8 +219,10 @@ def main():
     application.add_handler(CommandHandler('setpointturbidez', setpoint_turbidez))
     application.add_handler(CommandHandler('modo', modo))
     application.add_handler(CommandHandler('periodo', periodo))
-    application.add_handler(CommandHandler('rele', rele))
-    application.add_handler(MessageHandler(filters.Regex("^(destello)$"), destello))
+    application.add_handler(CommandHandler('ventilador', ventilador))
+    application.add_handler(CommandHandler('calentador', calentador))
+    application.add_handler(CommandHandler('filtro', filtro))
+    application.add_handler(MessageHandler(filters.Regex("^(alimentar)$"), alimentar))
     application.run_polling()
 
 if __name__ == '__main__':
