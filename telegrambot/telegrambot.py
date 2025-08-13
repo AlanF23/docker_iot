@@ -89,9 +89,9 @@ async def setpoint_temperatura(update: Update, context):
                 await client.publish(topic=topico, payload=context.args[0] , qos=1)
                 await context.bot.send_message(update.message.chat.id, text="Valor de temperatura seteado en {}".format(context.args[0]))
             else:
-                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo de temperatura")
         except ValueError:
-            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo de temperatura")
 
 async def setpoint_turbidez(update: Update, context):
     logging.info(update.message.text)
@@ -106,9 +106,9 @@ async def setpoint_turbidez(update: Update, context):
                 await client.publish(topic=topico, payload=context.args[0] , qos=1)
                 await context.bot.send_message(update.message.chat.id, text="Valor de turbidez seteado en {}".format(context.args[0]))
             else:
-                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+                await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo de turbidez")
         except ValueError:
-            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo")
+            await context.bot.send_message(update.message.chat.id, text="Ingrese un valor correcto de seteo de turbidez")
 
 async def modo(update: Update, context):
     logging.info(context.args)
