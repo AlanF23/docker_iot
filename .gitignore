@@ -139,3 +139,5 @@ grafana/
 mosquitto/
 wireguard/
 mariadb/
+config/
+setup.sh
