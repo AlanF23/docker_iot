@@ -21,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         apellido=update.message.from_user.last_name
     else:
         apellido=""
-    kb = [["temperatura"],["turbidez"],["gráfico temperatura"],["gráfico turbidez"], ["alimentar"]]
+    kb = [["temperatura"],["turbidez"],["gráfico temperatura"],["gráfico turbidez"], ["alimentar"],["estado"]]
     await context.bot.send_message(update.message.chat.id, text="Bienvenido al Bot "+ nombre + " " + apellido,reply_markup=ReplyKeyboardMarkup(kb))
 
 async def acercade(update: Update, context):
@@ -157,6 +157,76 @@ async def alimentar(update: Update, context):
         except ValueError:
             await context.bot.send_message(update.message.chat.id, text="No se pudo alimentar")
 
+'''
+async def estado(update: Update, context):
+    logging.info(update.message.text)
+    async with aiomqtt.Client(
+        os.environ["SERVIDOR"],
+        port=1883,
+    ) as client:
+        topico = update.message.text
+        try:
+            await client.publish(topic=topico, payload=1, qos=1) #envía un 1, el esp activa el destello
+            await context.bot.send_message(update.message.chat.id, text="Consultando estado")
+            await client.subscribe("estados/#")  # CLIENT_ID debe estar en tus env vars
+            async for message in messages:
+                try:
+                    data = json.loads(message.payload.decode())
+                    texto = (
+                        f"Estado de actuadores:\n"
+                        f"Calentador: {'Encendido' if data['calentador'] else 'Apagado'}\n"
+                        f"Ventilador: {'Encendido' if data['ventilador'] else 'Apagado'}\n"
+                        f"Filtro: {'Encendido' if data['filtro'] else 'Apagado'}"
+                    )
+                    await context.bot.send_message(update.message.chat.id, text=texto)
+                except Exception as e:
+                    logging.error("Error procesando estado: %s", e)
+                    await context.bot.send_message(update.message.chat.id, text="Error procesando la respuesta de estado")
+        except ValueError:
+            await context.bot.send_message(update.message.chat.id, text="No se pudo verificar el estado")
+'''
+import asyncio
+
+async def estado(update, context):
+    logging.info(update.message.text)
+
+    try:
+        async with aiomqtt.Client(
+            os.environ["SERVIDOR"],
+            port=1883,
+        ) as client:
+
+            async with client.messages() as messages:
+                # suscribirse antes de publicar
+                await client.subscribe("estados/#")
+                logging.info("Suscripto a estados/#")
+
+                # publicar la petición
+                await client.publish(topic="estado", payload=1, qos=1)
+                await context.bot.send_message(update.message.chat.id, text="Consultando estado...")
+
+                try:
+                    # esperar respuesta con timeout
+                    message = await asyncio.wait_for(messages.__anext__(), timeout=5.0)
+                    logging.info("Mensaje recibido: %s", message.payload.decode())
+
+                    data = json.loads(message.payload.decode())
+                    texto = (
+                        f"Estado de actuadores:\n"
+                        f"🔥 Calentador: {'Encendido' if data['calentador'] else 'Apagado'}\n"
+                        f"💨 Ventilador: {'Encendido' if data['ventilador'] else 'Apagado'}\n"
+                        f"💧 Filtro: {'Encendido' if data['filtro'] else 'Apagado'}"
+                    )
+                    await context.bot.send_message(update.message.chat.id, text=texto)
+
+                except asyncio.TimeoutError:
+                    await context.bot.send_message(update.message.chat.id, text="No se recibió respuesta del ESP32 en 5 segundos.")
+
+    except Exception as e:
+        logging.error("Error en estado: %s", e)
+        await context.bot.send_message(update.message.chat.id, text="Error al verificar estado")
+
+
 async def ventilador(update: Update, context):
     logging.info(context.args)
     async with aiomqtt.Client(
@@ -223,6 +293,7 @@ def main():
     application.add_handler(CommandHandler('calentador', calentador))
     application.add_handler(CommandHandler('filtro', filtro))
     application.add_handler(MessageHandler(filters.Regex("^(alimentar)$"), alimentar))
+    application.add_handler(MessageHandler(filters.Regex("^(estado)$"), estado))
     application.run_polling()
 
 if __name__ == '__main__':
